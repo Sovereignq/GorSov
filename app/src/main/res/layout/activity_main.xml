@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <RelativeLayout
+        android:layout_width="443dp"
+        android:layout_height="443dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/layout_bg"
+        android:elevation="15dp"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+
+        <TextView
+            android:id="@+id/textVhid"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Вхід"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="40dp" />
+
+        <TextView
+            android:id="@+id/textViewPassword"
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/editTextLogin"
+            android:layout_centerVertical="true"
+            android:text="Пароль"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/textViewLogin"
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/editTextLogin"
+            android:layout_alignLeft="@id/editTextLogin"
+            android:text="Логін"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/editTextLogin"
+            android:layout_width="354dp"
+            android:layout_height="63dp"
+            android:layout_above="@id/textViewPassword"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="-1dp"
+            android:background="@drawable/rounded_edittext"
+            android:elevation="15dp"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="349dp"
+            android:layout_height="62dp"
+            android:layout_below="@id/textViewPassword"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/rounded_edittext"
+            android:elevation="15dp"
+            android:padding="10dp"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:id="@+id/btnEnter"
+            android:layout_width="131dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/roundedbutton"
+            android:text="Увійти"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"/>
+
+
+    </RelativeLayout>
+</RelativeLayout>
