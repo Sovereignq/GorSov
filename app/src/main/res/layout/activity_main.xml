@@ -60,13 +60,13 @@
         <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="349dp"
-            android:layout_height="62dp"
+            android:layout_height="63dp"
             android:layout_below="@id/textViewPassword"
             android:layout_centerHorizontal="true"
             android:background="@drawable/rounded_edittext"
             android:elevation="15dp"
-            android:padding="10dp"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/btnEnter"
