@@ -54,6 +54,7 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="-1dp"
             android:background="@drawable/rounded_edittext"
+            android:inputType="textPersonName"
             android:elevation="15dp"
             android:padding="10dp" />
 
@@ -78,7 +79,7 @@
             android:background="@drawable/roundedbutton"
             android:text="Увійти"
             android:textSize="18sp"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#878787"/>
 
 
     </RelativeLayout>
