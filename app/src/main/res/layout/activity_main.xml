@@ -56,7 +56,8 @@
             android:background="@drawable/rounded_edittext"
             android:inputType="textPersonName"
             android:elevation="15dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            />
 
         <EditText
             android:id="@+id/editTextPassword"

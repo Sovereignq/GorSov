@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Ви підключилися до сервера",
                             Toast.LENGTH_LONG).show();
                     getFTPFileList();
-                    showCustomDialog(fileList);
+                    //showCustomDialog(fileList);
                     /*Intent mainmenu = new Intent(a, MainMenuActivity.class);
                     mainmenu.putExtra("USERNAME", login.getText().toString());
                     startActivity(mainmenu);*/
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void connectToFTPAddress() {
 
-        final String host = "192.168.43.196";
+        final String host = "192.168.1.17";
         final String username = login.getText().toString();
         final String pass = password.getText().toString();
 
@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
             new Thread(new Runnable() {
                 public void run() {
-                    status = ftpclient.ftpConnect(host, username, pass, 21);
-                    System.out.println(status);
+                    status = ftpclient.ftpConnect(Config.FTP_HOST, username, pass, Config.FTP_PORT);
+
                     if (status) {
                         Log.d(TAG, "Connection Success");
                     } else {
@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+
                 fileList = ftpclient.ftpPrintFilesList("/");
             }
         }).start();
