@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/relMain">
 
     <ImageView
         android:id="@+id/imageProfile"
@@ -26,8 +27,8 @@
 
     <TextView
         android:id="@+id/textUsername"
-        android:layout_width="218dp"
-        android:layout_height="62dp"
+        android:layout_width="501dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="-2dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

@@ -2,26 +2,46 @@ package com.example.gg;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.Date;
 
 public class MainMenuActivity extends AppCompatActivity {
     private TextView username;
+    MainMenuActivity b = this;
+    public static Bitmap bm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         getSupportActionBar().hide();
-        Thread myThread = null;
+        Thread myThread;
         Runnable runnable = new CountDownRunner();
         myThread= new Thread(runnable);
         myThread.start();
-
+        ImageView profileIcon = findViewById(R.id.imageProfile);
         username = findViewById(R.id.textUsername);
         Bundle loginmenu = getIntent().getExtras();
         username.setText("@" + loginmenu.getString("USERNAME"));
+        profileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RelativeLayout rlmain = findViewById(R.id.relMain);
+                rlmain.setDrawingCacheEnabled(true);
+                bm = rlmain.getDrawingCache();
+                Bundle extrasExit = new Bundle();
+                extrasExit.putString("NICK", username.getText().toString());
+                Intent exitprofile = new Intent(b, ExitProfileActivity.class);
+                exitprofile.putExtras(extrasExit);
+                startActivity(exitprofile);
+            }
+        });
     }
     public void doWork() {
         runOnUiThread(new Runnable() {

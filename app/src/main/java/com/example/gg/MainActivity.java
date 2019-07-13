@@ -2,10 +2,7 @@ package com.example.gg;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,21 +12,16 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import static com.example.gg.Config.FTP_HOST;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private Context cntx = null;
-    private MyFTPClientFunctions ftpclient = null;
+    private MyFTPClientFunctions ftpclient;
     public boolean status;
-    private String[] fileList;
-    private ProgressDialog pd;
-
     MainActivity a = this;
     EditText login, password;
     Button enter;
@@ -92,18 +84,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isOnline(MainActivity.this)) {
                 connectToFTPAddress();
-                if (!status) {
-                    Toast.makeText(MainActivity.this, "Ви підключилися до сервера",
+                if (status) {
+                    Toast.makeText(MainActivity.this,
+                            "Ви підключилися",
                             Toast.LENGTH_LONG).show();
-                    getFTPFileList();
-                    //showCustomDialog(fileList);
-                    /*Intent mainmenu = new Intent(a, MainMenuActivity.class);
+                    Intent mainmenu = new Intent(a, MainMenuActivity.class);
                     mainmenu.putExtra("USERNAME", login.getText().toString());
-                    startActivity(mainmenu);*/
+                    startActivity(mainmenu);
                 } else {
-                    Toast.makeText(MainActivity.this, "Введіть правильні дані",
+                    Toast.makeText(MainActivity.this,
+                            "Перевірте вхідні дані",
                             Toast.LENGTH_LONG).show();
-                }}
+                }
+                }
                 else {
 				Toast.makeText(MainActivity.this,
 						"Перевірте, будь-ласка, підключення до Інтернету",
@@ -114,24 +107,20 @@ public class MainActivity extends AppCompatActivity {
     }
     private void connectToFTPAddress() {
 
-        final String host = "192.168.1.17";
         final String username = login.getText().toString();
         final String pass = password.getText().toString();
 
-        //status = ftpclient.ftpConnect(host, username, pass, 21);
-
          if (username.length() < 1) {
-            Toast.makeText(MainActivity.this, "Please Enter User Name!",
+            Toast.makeText(MainActivity.this, "Введіть логін",
                     Toast.LENGTH_LONG).show();
         } else if (password.length() < 1) {
-            Toast.makeText(MainActivity.this, "Please Enter Password!",
+            Toast.makeText(MainActivity.this, "Введіть пароль",
                     Toast.LENGTH_LONG).show();
         } else {
 
-
-            new Thread(new Runnable() {
+          Thread b =  new Thread(new Runnable() {
                 public void run() {
-                    status = ftpclient.ftpConnect(Config.FTP_HOST, username, pass, Config.FTP_PORT);
+                    status = ftpclient.ftpConnect(FTP_HOST, username, pass, Config.FTP_PORT);
 
                     if (status) {
                         Log.d(TAG, "Connection Success");
@@ -139,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Connection failed");
                     }
                 }
-            }).start();
+            });b.start();
+          while (b.isAlive()){
+
+          }
         }
     }
     private boolean isOnline(Context context) {
@@ -150,48 +142,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
-    private void showCustomDialog(String[] fileList) {
-        // custom dialog
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.setContentView(R.layout.custom);
-        dialog.setTitle("/ Directory File List");
-
-        TextView tvHeading = (TextView) dialog.findViewById(R.id.tvListHeading);
-        tvHeading.setText(":: File List ::");
-
-        if (fileList != null && fileList.length > 0) {
-            ListView listView = (ListView) dialog
-                    .findViewById(R.id.lstItemList);
-            ArrayAdapter<String> fileListAdapter = new ArrayAdapter<String>(
-                    this, android.R.layout.simple_list_item_1, fileList);
-            listView.setAdapter(fileListAdapter);
-        } else {
-            tvHeading.setText(":: No Files ::");
-        }
-
-        Button dialogButton = (Button) dialog.findViewById(R.id.btnOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-    private void getFTPFileList() {
-        pd = ProgressDialog.show(MainActivity.this, "", "Getting Files...",
-                true, false);
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                fileList = ftpclient.ftpPrintFilesList("/");
-            }
-        }).start();
     }
 }
