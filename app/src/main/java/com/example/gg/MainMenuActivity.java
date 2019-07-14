@@ -3,25 +3,73 @@ package com.example.gg;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainMenuActivity extends AppCompatActivity {
     private TextView username;
     MainMenuActivity b = this;
     public static Bitmap bm;
+    LinearLayout recentApps;
+    ImageView reader;
+    ImageView chrome;
+    ImageButton delAll;
+    ArrayList<Boolean> posilToDel = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         getSupportActionBar().hide();
+        recentApps = findViewById(R.id.recentApps);
+        reader = findViewById(R.id.imageViewReader);
+        delAll = findViewById(R.id.buttonDelAll);
+        delAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i = 0; i < recentApps.getChildCount(); i++) {
+                    if (posilToDel.get(i)) {
+                        recentApps.removeViewAt(i);
+                        posilToDel.remove(i);
+                        i--;
+                    }
+                }
+            }
+        });
+        reader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i;
+                PackageManager manager = getPackageManager();
+                i = manager.getLaunchIntentForPackage("com.adobe.reader");
+                addRecentApp("pdfReader", R.drawable.reader, "com.adobe.reader");
+                startActivity(i);
+            }
+        });
+
+        chrome = findViewById(R.id.imageViewChrome);
+        chrome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                addRecentApp("google", R.drawable.chrome, "http://www.google.com");
+                startActivity(browserIntent);
+
+            }
+        });
+        ImageView profileIcon = findViewById(R.id.imageProfile);
         Thread myThread;
         Runnable runnable = new CountDownRunner();
         myThread= new Thread(runnable);
@@ -35,7 +83,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(filelist);
             }
         });
-        ImageView profileIcon = findViewById(R.id.imageProfile);
         username = findViewById(R.id.textUsername);
         Bundle loginmenu = getIntent().getExtras();
         username.setText("@" + loginmenu.getString("USERNAME"));
@@ -88,5 +135,69 @@ public class MainMenuActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    void addRecentApp(final String name, int id, final String pacName) {
+        LayoutInflater li = getLayoutInflater();
+        final View v = li.inflate(R.layout.recapp, null, false);
+        registerForContextMenu(v);
+        ((TextView) v.findViewById(R.id.textView)).setText(name);
+        ((ImageView) v.findViewById(R.id.imageView)).setImageResource(id);
+        recentApps.addView(v, 0);
+        posilToDel.add(0, true);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (name.equals("pdfReader")) {
+                    intent = getPackageManager().getLaunchIntentForPackage("com.adobe.reader");
+                } else
+                    intent.setData(Uri.parse(pacName));
+                startActivity(intent);
+            }
+        });
+
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            LayoutInflater k = getLayoutInflater();
+            View jj = k.inflate(R.layout.delete, null, false);
+
+            @Override
+            public boolean onLongClick(final View view) {
+                for (int i = 0; i < recentApps.getChildCount(); i++) {
+                    if (recentApps.getChildAt(i) == view) {
+                        ((LinearLayout) recentApps.getChildAt(i).findViewById(R.id.ll)).addView(jj);
+                        ((ImageView) jj.findViewById(R.id.imageDelete)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view1) {
+                                posilToDel.remove(recentApps.indexOfChild(view));
+                                recentApps.removeView(view);
+                                System.out.println(recentApps.getTouchables().size() + " " +
+                                        recentApps.getTouchables().indexOf(view));
+
+                                for (int i = 0; i < recentApps.getChildCount(); i++) {
+                                    recentApps.getChildAt(i).setAlpha(1);
+                                }
+                            }
+                        });
+                        final int finalI = i;
+                        ((ImageView) jj.findViewById(R.id.imageLock)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view1) {
+                                System.out.println(recentApps.getTouchables().size() + " " +
+                                        recentApps.getTouchables().indexOf(view));
+                                posilToDel.set(recentApps.getTouchables().indexOf(view), false);
+                                for (int i = 0; i < recentApps.getChildCount(); i++) {
+                                    recentApps.getChildAt(i).setAlpha(1);
+                                }
+                                ((LinearLayout) recentApps.getChildAt(finalI).findViewById(R.id.ll)).removeView(jj);
+
+                            }
+                        });
+
+                    } else recentApps.getChildAt(i).setAlpha(0.15f);
+                }
+                return true;
+            }
+        });
     }
 }
