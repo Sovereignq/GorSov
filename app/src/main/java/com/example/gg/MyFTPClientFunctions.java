@@ -14,7 +14,7 @@ public class MyFTPClientFunctions {
 
     private static final String TAG = "MyFTPClientFunctions";
     public static MyFTPClientFunctions ftpclient;
-    public FTPClient mFTPClient;
+    public static FTPClient mFTPClient;
     public int code;
     public int ftpConnect(String host, String username, String password,
                               int port) {
@@ -37,15 +37,19 @@ public class MyFTPClientFunctions {
     }
 
     public boolean ftpDisconnect() {
-        try {
-            mFTPClient.logout();
-            mFTPClient.disconnect();
-            return true;
-        } catch (Exception e) {
-            Log.d(TAG, "Error occurred while disconnecting from ftp server.");
-        }
-
-        return false;
+        Thread c = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MyFTPClientFunctions.mFTPClient.logout();
+                    MyFTPClientFunctions.mFTPClient.disconnect();
+                } catch (Exception e) {
+                    Log.d(TAG, "Error occurred while disconnecting from ftp server.");
+                }
+            }
+        });
+        c.start();
+        return true;
     }
 
     public String ftpGetCurrentWorkingDirectory() {
