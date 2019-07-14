@@ -30,23 +30,8 @@ public class MainMenuActivity extends AppCompatActivity {
         materials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String [] files = {};
-                if(Config.FTP_ENABLED)
-                {
-                    files = MyFTPClientFunctions.ftpclient.ftpPrintFilesList("/");
-                    /*System.out.println(files[0]);
-                    MyFTPClientFunctions.ftpclient.ftpDownload(files[0],"/storage/emulated/0/Downloads/" + files[0]);*/
-                }
-                else
-                {
-                    Toast.makeText(view.getContext(),
-                            "Сервер недоступний",
-                            Toast.LENGTH_LONG).show();
-                }
+
                 Intent filelist = new Intent(b, FileListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putStringArray("FILELIST", files);
-                filelist.putExtras(bundle);
                 startActivity(filelist);
             }
         });
