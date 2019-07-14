@@ -1,6 +1,7 @@
-package com.example.sov;
+package com.example.gg;
 
 import android.widget.Toast;
+
 
 public class FileReader {
     public void read(String filePath)

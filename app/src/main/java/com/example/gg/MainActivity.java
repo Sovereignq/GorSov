@@ -19,6 +19,7 @@ import static com.example.gg.Config.FTP_HOST;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static final String PREFS_NAME = "MyPrefsFile";
+    public static Context context;
     public int status;
     MainActivity a = this;
     EditText login, password;

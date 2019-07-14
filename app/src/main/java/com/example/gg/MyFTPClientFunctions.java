@@ -105,7 +105,7 @@ public class MyFTPClientFunctions {
 
     }
 
-    public boolean ftpDownload(String srcFilePath, String desFilePath) {
+    public boolean ftpDownload(final String srcFilePath, final String desFilePath) {
        final boolean[] status = {false};
         Thread t = new Thread(new Runnable() {
             @Override
