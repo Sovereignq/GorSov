@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -51,7 +52,16 @@ public class FileListActivity extends AppCompatActivity {
                     }
                 } else {
                     String fileName = fileList.get(i);
-                    MyFTPClientFunctions.ftpclient.ftpDownload(fileName, "/storage/emulated/0/Download/");
+                    File file = new File(Config.DOWNLOAD_DIR, fileName);
+                    if(file.exists()) {
+                        FileReader reader = new FileReader();
+                        reader.read(Config.DOWNLOAD_DIR.concat(fileName));
+
+                    }
+                    else {
+                        MyFTPClientFunctions.ftpclient.ftpDownload(fileName, Config.DOWNLOAD_DIR);
+                    }
+
                 }
 
 
@@ -63,7 +73,7 @@ public class FileListActivity extends AppCompatActivity {
         ArrayList<String> files = new ArrayList<>();
 
 
-        File directory = new File("/storage/emulated/0/Download/");
+        File directory = new File(Config.DOWNLOAD_DIR);
         File[] fls = directory.listFiles();
 
         if (fls != null)
