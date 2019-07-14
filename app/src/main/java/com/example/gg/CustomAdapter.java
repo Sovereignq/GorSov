@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CustomAdapter extends ArrayAdapter {
-    String[] fileList;
+    ArrayList<String> fileList;
     int download;
     Context context;
-    public CustomAdapter(Context context, String[] fileList, int download) {
+    public CustomAdapter(Context context, ArrayList<String> fileList, int download) {
         super(context, R.layout.activity_file_list, fileList);
         this.fileList = fileList;
         this.download = download;
@@ -25,7 +25,7 @@ public class CustomAdapter extends ArrayAdapter {
         convertView = layoutInflater.inflate(R.layout.customdapter, null);
         TextView fileName = convertView.findViewById(R.id.fileView);
         ImageView imgDownload = convertView.findViewById(R.id.imageDownload);
-        fileName.setText(fileList[position]);
+        fileName.setText(fileList.get(position));
         imgDownload.setBackgroundResource(R.drawable.download);
         return convertView;
     }
