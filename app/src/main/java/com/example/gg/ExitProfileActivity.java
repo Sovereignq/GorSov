@@ -40,7 +40,7 @@ public class ExitProfileActivity extends AppCompatActivity {
         exitfromprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                   
+                    stat = MyFTPClientFunctions.ftpclient.ftpDisconnect();
                     Intent exit = new Intent(c, MainActivity.class);
                     startActivity(exit);
                     
