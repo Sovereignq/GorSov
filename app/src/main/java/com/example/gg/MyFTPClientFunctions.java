@@ -106,21 +106,32 @@ public class MyFTPClientFunctions {
     }
 
     public boolean ftpDownload(String srcFilePath, String desFilePath) {
-        boolean status = false;
-        try {
-            File file = new File(desFilePath, srcFilePath);
-            System.out.println(file.getAbsolutePath());
-            file.createNewFile();
-            FileOutputStream desFileStream = new FileOutputStream(file);
-            status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
-            desFileStream.close();
+       final boolean[] status = {false};
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File file = new File(desFilePath, srcFilePath);
+                    System.out.println(file.getAbsolutePath());
+                    file.createNewFile();
+                    FileOutputStream desFileStream = new FileOutputStream(file);
+                    status[0] = mFTPClient.retrieveFile(srcFilePath, desFileStream);
+                    desFileStream.close();
 
-            return status;
-        } catch (Exception e) {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        return status;
+        return status[0];
     }
 
 }
