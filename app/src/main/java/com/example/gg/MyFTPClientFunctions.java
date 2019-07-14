@@ -1,6 +1,7 @@
 package com.example.gg;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -12,25 +13,27 @@ import android.util.Log;
 public class MyFTPClientFunctions {
 
     private static final String TAG = "MyFTPClientFunctions";
-    public FTPClient mFTPClient = null;
-
-    public boolean ftpConnect(String host, String username, String password,
+    public static MyFTPClientFunctions ftpclient;
+    public FTPClient mFTPClient;
+    public int code;
+    public int ftpConnect(String host, String username, String password,
                               int port) {
         try {
             mFTPClient = new FTPClient();
             mFTPClient.connect(host, port);
             if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
-                boolean status = mFTPClient.login(username, password);
+                mFTPClient.login(username, password);
+
                 mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
                 mFTPClient.enterLocalPassiveMode();
-
-                return status;
+                code = mFTPClient.getReplyCode();
+                return code;
             }
         } catch (Exception e) {
             Log.d(TAG, "Error: could not connect to host " + host);
         }
 
-        return false;
+        return 404;
     }
 
     public boolean ftpDisconnect() {
@@ -66,29 +69,44 @@ public class MyFTPClientFunctions {
         return false;
     }
 
-    public String[] ftpPrintFilesList(String dir_path) {
-        String[] fileList = null;
-        try {
-            FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
-            int length = ftpFiles.length;
-            fileList = new String[length];
-            for (int i = 0; i < length; i++) {
-                String name = ftpFiles[i].getName();
-                boolean isFile = ftpFiles[i].isFile();
+    public String[] ftpPrintFilesList(final String dir_path) {
 
-                if (isFile) {
-                    fileList[i] = "File :: " + name;
-                    Log.i(TAG, "File : " + name);
-                } else {
-                    fileList[i] = "Directory :: " + name;
-                    Log.i(TAG, "Directory : " + name);
+        final String[][] fileList = {null};
+
+             Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FTPFile[] ftpFiles = new FTPFile[0];
+                    try {
+                        ftpFiles = mFTPClient.listFiles(dir_path);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    int length = ftpFiles.length;
+                    fileList[0] = new String[length];
+                    for (int i = 0; i < length; i++) {
+                        String name = ftpFiles[i].getName();
+                        boolean isFile = ftpFiles[i].isFile();
+
+                        if (isFile) {
+                            fileList[0][i] = "File :: " + name;
+                            Log.i(TAG, "File : " + name);
+                        } else {
+                            fileList[0][i] = "Directory :: " + name;
+                            Log.i(TAG, "Directory : " + name);
+                        }
+                    }
                 }
-            }
-            return fileList;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return fileList;
+            });
+             t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
         }
+
+        return fileList[0];
+
     }
 
     public boolean ftpDownload(String srcFilePath, String desFilePath) {

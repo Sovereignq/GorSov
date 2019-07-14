@@ -16,12 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import static com.example.gg.Config.FTP_HOST;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private MyFTPClientFunctions ftpclient;
-    public boolean status;
+
+    public int status;
     MainActivity a = this;
     EditText login, password;
     Button enter;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-        ftpclient = new MyFTPClientFunctions();
+        MyFTPClientFunctions.ftpclient = new MyFTPClientFunctions();
         login = findViewById(R.id.editTextLogin);
         password = findViewById(R.id.editTextPassword);
         enter = findViewById(R.id.btnEnter);
@@ -84,16 +86,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isOnline(MainActivity.this)) {
                 connectToFTPAddress();
-                if (status) {
+                    System.out.println(MyFTPClientFunctions.ftpclient.code);
+                if (MyFTPClientFunctions.ftpclient.code==200) {
                     Toast.makeText(MainActivity.this,
                             "Ви підключилися",
                             Toast.LENGTH_LONG).show();
+
                     Intent mainmenu = new Intent(a, MainMenuActivity.class);
                     mainmenu.putExtra("USERNAME", login.getText().toString());
                     startActivity(mainmenu);
-                } else {
+
+                } else if(MyFTPClientFunctions.ftpclient.code==530) {
                     Toast.makeText(MainActivity.this,
                             "Перевірте вхідні дані",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if(MyFTPClientFunctions.ftpclient.code==404) {
+                    Toast.makeText(MainActivity.this,
+                            "Сервер недоступний",
                             Toast.LENGTH_LONG).show();
                 }
                 }
@@ -120,19 +130,18 @@ public class MainActivity extends AppCompatActivity {
 
           Thread b =  new Thread(new Runnable() {
                 public void run() {
-                    status = ftpclient.ftpConnect(FTP_HOST, username, pass, Config.FTP_PORT);
+                    status = MyFTPClientFunctions.ftpclient.ftpConnect(FTP_HOST, username, pass, Config.FTP_PORT);
 
-                    if (status) {
-                        Log.d(TAG, "Connection Success");
-                    } else {
-                        Log.d(TAG, "Connection failed");
-                    }
                 }
-            });b.start();
-          while (b.isAlive()){
+            });
+          b.start();
+             try {
+                 b.join(6000);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
 
-          }
-        }
+         }
     }
     private boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context

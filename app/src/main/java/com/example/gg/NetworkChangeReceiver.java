@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
     int i = 0;
@@ -29,7 +30,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }
                 else
                 {
-                    //Тут нужно вывести сообщение о небезопасном подключении
+                    Toast.makeText(context, "FTP-сервер не доступний у цій мережі",Toast.LENGTH_SHORT).show();
                     Config.FTP_ENABLED = false;
                 }
 
