@@ -1,17 +1,23 @@
 package com.example.gg;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class FileListActivity extends AppCompatActivity {
+    private static AppCompatActivity context;
     ListView fileListView;
     ArrayList<String> fileList;
     @Override
@@ -21,8 +27,7 @@ public class FileListActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         fileListView = findViewById(R.id.listFiles);
         fileList = getFiles();
-
-
+        context=this;
         CustomAdapter customadapter = new CustomAdapter(this, fileList, R.drawable.download);
         fileListView.setAdapter(customadapter);
 
@@ -30,8 +35,25 @@ public class FileListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String fileName = fileList.get(i);
-                MyFTPClientFunctions.ftpclient.ftpDownload(fileName,"/storage/emulated/sdcard0/Download/");
+                if (ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(context,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                    } else {
+
+                        ActivityCompat.requestPermissions(context,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                1);
+                    }
+                } else {
+                    String fileName = fileList.get(i);
+                    MyFTPClientFunctions.ftpclient.ftpDownload(fileName, "/storage/emulated/0/Download/");
+                }
+
 
             }
         });
@@ -41,7 +63,7 @@ public class FileListActivity extends AppCompatActivity {
         ArrayList<String> files = new ArrayList<>();
 
 
-        File directory = new File("/storage/emulated/sdcard0/Download/");
+        File directory = new File("/storage/emulated/0/Download/");
         File[] fls = directory.listFiles();
 
         if (fls != null)
@@ -52,7 +74,11 @@ public class FileListActivity extends AppCompatActivity {
 
         if(Config.FTP_ENABLED)
             files.addAll(MyFTPClientFunctions.ftpclient.ftpPrintFilesList("/"));
+
+        HashSet<String> tmp = new HashSet<>(files);
+        files = new ArrayList<>(tmp);
         return files;
     }
-}
 
+
+}
