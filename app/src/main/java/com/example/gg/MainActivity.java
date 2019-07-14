@@ -4,12 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,7 @@ import static com.example.gg.Config.FTP_HOST;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
+    public static final String PREFS_NAME = "MyPrefsFile";
     public int status;
     MainActivity a = this;
     EditText login, password;
@@ -32,52 +31,11 @@ public class MainActivity extends AppCompatActivity {
         MyFTPClientFunctions.ftpclient = new MyFTPClientFunctions();
         login = findViewById(R.id.editTextLogin);
         password = findViewById(R.id.editTextPassword);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        login.setText(settings.getString("LOGIN", ""));
+        password.setText(settings.getString("PASSWORD", ""));
         enter = findViewById(R.id.btnEnter);
-        enter.setEnabled(false);
-        login.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    enter.setTextColor(Color.rgb(255,255,255));
-                    enter.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    enter.setTextColor(Color.rgb(255,255,255));
-                    enter.setEnabled(true);
-                }
-            }
-        });
-
-        password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    enter.setTextColor(Color.rgb(255,255,255));
-                    enter.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    enter.setTextColor(Color.rgb(255,255,255));
-                    enter.setEnabled(true);
-                }
-            }
-        });
+        enter.setTextColor(Color.rgb(255,255,255));
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,5 +106,15 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("LOGIN", login.getText().toString());
+        editor.putString("PASSWORD", password.getText().toString());
+        editor.commit();
     }
 }
