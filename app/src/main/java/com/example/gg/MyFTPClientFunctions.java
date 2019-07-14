@@ -89,10 +89,10 @@ public class MyFTPClientFunctions {
                         boolean isFile = ftpFiles[i].isFile();
 
                         if (isFile) {
-                            fileList[0][i] = "File :: " + name;
+                            fileList[0][i] = name;
                             Log.i(TAG, "File : " + name);
                         } else {
-                            fileList[0][i] = "Directory :: " + name;
+                            fileList[0][i] = name;
                             Log.i(TAG, "Directory : " + name);
                         }
                     }

@@ -17,7 +17,6 @@ public class MainMenuActivity extends AppCompatActivity {
     private TextView username;
     MainMenuActivity b = this;
     public static Bitmap bm;
-    ImageView imgMaterials;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +26,30 @@ public class MainMenuActivity extends AppCompatActivity {
         Runnable runnable = new CountDownRunner();
         myThread= new Thread(runnable);
         myThread.start();
-        imgMaterials = findViewById(R.id.imageViewMaterials);
+        ImageView materials = findViewById(R.id.imageViewMaterials);
+        materials.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String [] files = {};
+                if(Config.FTP_ENABLED)
+                {
+                    files = MyFTPClientFunctions.ftpclient.ftpPrintFilesList("/");
+                    /*System.out.println(files[0]);
+                    MyFTPClientFunctions.ftpclient.ftpDownload(files[0],"/storage/emulated/0/Downloads/" + files[0]);*/
+                }
+                else
+                {
+                    Toast.makeText(view.getContext(),
+                            "Сервер недоступний",
+                            Toast.LENGTH_LONG).show();
+                }
+                Intent filelist = new Intent(b, FileListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putStringArray("FILELIST", files);
+                filelist.putExtras(bundle);
+                startActivity(filelist);
+            }
+        });
         ImageView profileIcon = findViewById(R.id.imageProfile);
         username = findViewById(R.id.textUsername);
         Bundle loginmenu = getIntent().getExtras();
@@ -43,27 +65,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 Intent exitprofile = new Intent(b, ExitProfileActivity.class);
                 exitprofile.putExtras(extrasExit);
                 startActivity(exitprofile);
-
-            }
-        });
-
-        imgMaterials.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String [] files = {};
-                if(Config.FTP_ENABLED)
-                {
-                    files = MyFTPClientFunctions.ftpclient.ftpPrintFilesList("/");
-                    System.out.println(files[0]);
-                    MyFTPClientFunctions.ftpclient.ftpDownload(files[0],"/storage/emulated/0/Downloads/" + files[0]);
-                }
-                else
-                {
-                        Toast.makeText(view.getContext(),
-                            "Сервер недоступний",
-                            Toast.LENGTH_LONG).show();
-                }
-
             }
         });
     }
@@ -76,14 +77,14 @@ public class MainMenuActivity extends AppCompatActivity {
                     int hours = dt.getHours();
                     int minutes = dt.getMinutes();
                     String curTime = "";
-                    if (minutes <= 10) {
+                    if (minutes < 10) {
                         curTime += hours + ":0" + minutes;
-                    } else if (hours <= 10) {
+                    } else if (hours < 10) {
                         curTime += "0" + hours + ":" + minutes;
-                    } else if (minutes<= 10 && hours<=10) {
+                    } else if (minutes< 10 && hours<10) {
                         curTime += "0" + hours + ":0" + minutes;
                     } else {
-                    curTime += hours + ":" + minutes;
+                        curTime += hours + ":" + minutes;
                     }
                     txtCurrentTime.setText(curTime);
                 }catch (Exception e) {}
