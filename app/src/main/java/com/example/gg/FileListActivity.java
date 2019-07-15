@@ -21,9 +21,10 @@ import java.util.HashSet;
 
 public class FileListActivity extends AppCompatActivity {
     private static AppCompatActivity context;
-    FileListActivity f = this;
     ListView fileListView;
     ArrayList<String> fileList;
+    public static String fileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +32,7 @@ public class FileListActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         fileListView = findViewById(R.id.listFiles);
         fileList = getFiles();
-        context=this;
+        context = this;
         CustomAdapter customadapter = new CustomAdapter(this, fileList);
         fileListView.setAdapter(customadapter);
 
@@ -54,16 +55,14 @@ public class FileListActivity extends AppCompatActivity {
                                 1);
                     }
                 } else {
-                    String fileName = fileList.get(i);
+
+                    fileName = fileList.get(i);
                     File file = new File(Config.DOWNLOAD_DIR, fileName);
-                    if(!file.exists())
+                    if (!file.exists()) {
                         MyFTPClientFunctions.ftpclient.ftpDownload(fileName, Config.DOWNLOAD_DIR);
-
-                    FileReader reader = new FileReader();
-                    reader.read(Config.DOWNLOAD_DIR.concat(fileName));
-
+                    }
+                    finish();
                 }
-
 
             }
         });
@@ -77,12 +76,11 @@ public class FileListActivity extends AppCompatActivity {
         File[] fls = directory.listFiles();
 
         if (fls != null)
-            for(File f : fls)
-            {
+            for (File f : fls) {
                 files.add(f.getName());
             }
 
-        if(Config.FTP_ENABLED)
+        if (Config.FTP_ENABLED)
             files.addAll(MyFTPClientFunctions.ftpclient.ftpPrintFilesList("/"));
 
         HashSet<String> tmp = new HashSet<>(files);

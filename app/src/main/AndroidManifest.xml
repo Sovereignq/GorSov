@@ -17,9 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".myWebView"></activity>
-        <activity android:name=".FileListActivity"></activity>
-        <activity android:name=".ExitProfileActivity"></activity>
+        <activity android:name=".SetSSID"></activity>
+        <activity android:name=".myWebView" />
+        <activity android:name=".FileListActivity" />
+        <activity android:name=".ExitProfileActivity" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape">
