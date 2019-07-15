@@ -12,12 +12,10 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends ArrayAdapter {
     ArrayList<String> fileList;
-    int download;
     Context context;
-    public CustomAdapter(Context context, ArrayList<String> fileList, int download) {
+    public CustomAdapter(Context context, ArrayList<String> fileList) {
         super(context, R.layout.activity_file_list, fileList);
         this.fileList = fileList;
-        this.download = download;
         this.context = context;
     }
 
@@ -26,9 +24,7 @@ public class CustomAdapter extends ArrayAdapter {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = layoutInflater.inflate(R.layout.customdapter, null);
         TextView fileName = convertView.findViewById(R.id.fileView);
-        ImageView imgDownload = convertView.findViewById(R.id.imageDownload);
         fileName.setText(fileList.get(position));
-        imgDownload.setBackgroundResource(R.drawable.download);
         return convertView;
     }
 }

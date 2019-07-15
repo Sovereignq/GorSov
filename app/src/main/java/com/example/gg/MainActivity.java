@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -118,4 +119,5 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("PASSWORD", password.getText().toString());
         editor.commit();
     }
+
 }

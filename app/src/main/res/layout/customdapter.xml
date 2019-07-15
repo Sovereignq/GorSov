@@ -4,15 +4,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageDownload"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:srcCompat="@drawable/download"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="100dp"
-        />
-
     <TextView
         android:id="@+id/fileView"
         android:layout_width="wrap_content"
@@ -20,7 +11,8 @@
         android:text=""
         android:layout_marginStart="100dp"
         android:textSize="60sp"
-        android:layout_alignBottom="@id/imageDownload"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="100dp"
         android:layout_alignParentLeft="true"/>
 
 </RelativeLayout>

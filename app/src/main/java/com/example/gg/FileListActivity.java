@@ -1,8 +1,10 @@
 package com.example.gg;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,6 +21,7 @@ import java.util.HashSet;
 
 public class FileListActivity extends AppCompatActivity {
     private static AppCompatActivity context;
+    FileListActivity f = this;
     ListView fileListView;
     ArrayList<String> fileList;
     @Override
@@ -29,7 +32,7 @@ public class FileListActivity extends AppCompatActivity {
         fileListView = findViewById(R.id.listFiles);
         fileList = getFiles();
         context=this;
-        CustomAdapter customadapter = new CustomAdapter(this, fileList, R.drawable.download);
+        CustomAdapter customadapter = new CustomAdapter(this, fileList);
         fileListView.setAdapter(customadapter);
 
         fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,6 +92,5 @@ public class FileListActivity extends AppCompatActivity {
         files = new ArrayList<>(tmp);
         return files;
     }
-
 
 }
