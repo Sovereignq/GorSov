@@ -6,4 +6,5 @@ public class Config {
     public static final String WIFI_SSID = "YFML VPN";
     public static Boolean FTP_ENABLED = true;
     public static final String DOWNLOAD_DIR = "/storage/emulated/0/Download/";
+    public static final String URL = "https://www.google.com/";
 }

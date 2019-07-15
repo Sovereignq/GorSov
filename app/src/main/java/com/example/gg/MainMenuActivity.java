@@ -64,9 +64,9 @@ public class MainMenuActivity extends AppCompatActivity {
         chrome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                Intent web = new Intent(b,myWebView.class);
                 addRecentApp("google", R.drawable.chrome, "http://www.google.com");
-                startActivity(browserIntent);
+                startActivityForResult(web,1);
 
             }
         });

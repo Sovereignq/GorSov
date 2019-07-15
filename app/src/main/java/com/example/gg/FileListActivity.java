@@ -56,14 +56,11 @@ public class FileListActivity extends AppCompatActivity {
                 } else {
                     String fileName = fileList.get(i);
                     File file = new File(Config.DOWNLOAD_DIR, fileName);
-                    if(file.exists()) {
-                        FileReader reader = new FileReader();
-                        reader.read(Config.DOWNLOAD_DIR.concat(fileName));
-
-                    }
-                    else {
+                    if(!file.exists())
                         MyFTPClientFunctions.ftpclient.ftpDownload(fileName, Config.DOWNLOAD_DIR);
-                    }
+
+                    FileReader reader = new FileReader();
+                    reader.read(Config.DOWNLOAD_DIR.concat(fileName));
 
                 }
 

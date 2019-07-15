@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".myWebView"></activity>
         <activity android:name=".FileListActivity"></activity>
         <activity android:name=".ExitProfileActivity"></activity>
         <activity
